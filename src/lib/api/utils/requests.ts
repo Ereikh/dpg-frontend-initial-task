@@ -1,14 +1,14 @@
 /**
  * Dependence
  */
-import {MathUtils} from "$lib/utils/math";
-import {ObjectUtils} from "$lib/utils/object";
-import {AxiosError, type AxiosResponse} from "axios";
+import { MathUtils } from '$lib/utils/math';
+import { ObjectUtils } from '$lib/utils/object';
+import { AxiosError, type AxiosResponse } from 'axios';
 
 /**
  * Types
  */
-import type {ArrayOr} from "$lib/utils/object";
+import type { ArrayOr } from '$lib/utils/object';
 
 /**
  * Try catch request
@@ -25,7 +25,7 @@ export async function catchrequest<TResponse, TCatchResponse, TErrorType = Axios
 	try {
 		return await promise;
 	} catch (error) {
-		if (typeof catchResponse === "function") {
+		if (typeof catchResponse === 'function') {
 			return (catchResponse as (error: TErrorType) => TCatchResponse)(
 				error as TErrorType
 			) as TCatchResponse;
@@ -47,35 +47,27 @@ export function checkokstatus<TResponse extends AxiosResponse<any>>(
 	ok: ArrayOr<number> | ((response: TResponse) => boolean) = (response) =>
 		MathUtils.clampInclude(response.status, 200, 226)
 ): TResponse {
-	/**
-	 * Check is function
-	 */
-	if (typeof ok === "function") {
+	if (typeof ok === 'function') {
 		if (!ok(response)) {
 			throw new AxiosError(
-				response.data?.message || "unknown error message data",
+				response.data?.message || 'unknown error message data',
 				response.status.toString(),
 				response.config,
 				response.request,
 				response
 			);
 		}
-
 		return response;
 	}
 
-	/**
-	 * Check is numbers include
-	 */
 	if (!ObjectUtils.convertToArray(ok).includes(response.status)) {
 		throw new AxiosError(
-			response.data?.message || "unknown error message data",
+			response.data?.message || 'unknown error message data',
 			response.status.toString(),
 			response.config,
 			response.request,
 			response
 		);
 	}
-
 	return response;
 }

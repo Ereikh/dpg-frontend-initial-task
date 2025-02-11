@@ -14,18 +14,25 @@
 
 	/**
 	 * Load data
-	 * @description Метод для получения постов
+	 * @description Метод для получения постов с кешированием
 	 */
 	const loadData = async () => {
-		const response = await PostsApi.getAll();
+		try {
+			const response = await PostsApi.getAll();
 
-		if (!response.success) {
-			throw new Error(getReasonPhrase(response.data.code));
+			if ('success' in response && response.success) {
+				return response.data;
+			} else {
+				throw new Error(getReasonPhrase(response.data.code));
+			}
+		} catch (error) {
+			const cachedPosts = localStorage.getItem('cachedPosts');
+			if (cachedPosts) {
+				return JSON.parse(cachedPosts);
+			}
+			throw new Error('Нет данных для отображения.');
 		}
-
-		return response.data;
 	};
-
 </script>
 
 {#await loadData()}
@@ -34,6 +41,6 @@
 	<Feed {posts} />
 {:catch e}
 	<ErrorComponent>
-		{e}
+		{e.message}
 	</ErrorComponent>
 {/await}
