@@ -20,9 +20,12 @@
 		const response = await PostsApi.getAll();
 
 		if (!response.success) {
-			throw new Error(getReasonPhrase(response.data.code));
+			const cachedData = JSON.parse(localStorage.getItem('data')) || []
+			const errorText = cachedData.length ? getReasonPhrase(response.data.code) : "Нет данных для отображения" 
+			throw new Error(errorText)
 		}
 
+		localStorage.setItem('data', JSON.stringify(response.data))
 		return response.data;
 	};
 
