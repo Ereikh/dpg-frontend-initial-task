@@ -17,6 +17,7 @@ interface IServerResponse {
 export interface ISuccessResponse<T> extends IServerResponse {
 	success: true;
 	data: T;
+	cached?: boolean;
 }
 
 /**

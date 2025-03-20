@@ -22,8 +22,8 @@
 		if (!response.success) {
 			throw new Error(getReasonPhrase(response.data.code));
 		}
-
-		return response.data;
+		const res = {posts: response.data, cached: response.cached};
+		return res.posts
 	};
 
 </script>
