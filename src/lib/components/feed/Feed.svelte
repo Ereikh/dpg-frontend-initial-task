@@ -23,6 +23,6 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
-    width: 500px;
+    width: 500px; 
   }
 </style>
